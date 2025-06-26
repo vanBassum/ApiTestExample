@@ -43,5 +43,11 @@ namespace TestProject
             Assert.Equal(forecast.Date, createdForecast.Date);
             Assert.Equal(forecast.TemperatureC, createdForecast.TemperatureC);
         }
+
+        [Fact]
+        public async Task badtest()
+        {
+            Assert.Fail("This test is intentionally failing to demonstrate the test framework.");
+        }
     }
 }
