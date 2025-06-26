@@ -404,3 +404,4 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+api_test_project/appsettings.Development.json
