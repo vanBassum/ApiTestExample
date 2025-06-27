@@ -1,14 +1,20 @@
-name: Run Tests
-
-on:
-  pull_request:
-    branches: [ main ]  # or 'master' or any other branch you're using
-  push:
-    branches: [ main ]
-
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:8
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: password
+          MYSQL_DATABASE: testdb
+        options: >-
+          --health-cmd="mysqladmin ping --silent"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
 
     steps:
     - name: Checkout repository
@@ -17,7 +23,10 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '9.0.x'  # adjust if you're using a different version
+        dotnet-version: '9.0.x'
+
+    - name: Install EF Core CLI tools
+      run: dotnet tool install --global dotnet-ef
 
     - name: Restore dependencies
       run: dotnet restore
@@ -25,5 +34,13 @@ jobs:
     - name: Build
       run: dotnet build --no-restore --configuration Release
 
+    - name: Generate EF Core migration
+      run: |
+        dotnet ef migrations add __AutoCheckMigration__ --context ApplicationDbContext --project api_test_project --output-dir Data/Migrations || true
+        git diff --exit-code || (echo "❌ Model changes detected! Run 'dotnet ef migrations add' locally." && exit 1)
+
     - name: Run Tests
-      run: dotnet test --no-build --configuration Release --verbosity normal
+      run: dotnet test --no-build --configuration Release
+      env:
+        ASPNETCORE_ENVIRONMENT: Production
+        ConnectionStrings__DefaultConnection: "server=localhost;port=3306;database=testdb;user=root;password=password"
