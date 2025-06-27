@@ -20,14 +20,15 @@ namespace TestProject
                 var sp = services.BuildServiceProvider();
                 using var scope = sp.CreateScope();
                 var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                var provider = db.Database.ProviderName ?? throw new NullReferenceException("Db provider name is null");
 
-                if (env == "Development")
+                if (provider.Contains("InMemory"))
                 {
-                    db.Database.EnsureCreated(); // For InMemory
+                    db.Database.EnsureCreated(); // Dev / InMemory
                 }
                 else
                 {
-                    db.Database.Migrate(); // ✅ Apply real migrations for MySQL
+                    db.Database.Migrate(); // CI / MySQL
                 }
             });
         }
