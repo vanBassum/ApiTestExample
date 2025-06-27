@@ -60,4 +60,5 @@ jobs:
         path: '**/test-results.trx'
         reporter: dotnet-trx
         fail-on-error: false
-        output: check-run
+        output: check-run  # 👈 REQUIRED for rich summary in Checks tab
+        
