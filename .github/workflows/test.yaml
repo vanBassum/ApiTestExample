@@ -29,9 +29,6 @@ jobs:
       with:
         dotnet-version: '9.0.x'
 
-    - name: Install EF Core CLI tools
-      run: dotnet tool install --global dotnet-ef
-
     - name: Restore dependencies
       run: dotnet restore
 
@@ -39,7 +36,23 @@ jobs:
       run: dotnet build --no-restore --configuration Release
 
     - name: Run Tests
-      run: dotnet test --no-build --configuration Release
+      run: dotnet test --no-build --configuration Release --logger "trx;LogFileName=test-results.trx"
       env:
         ASPNETCORE_ENVIRONMENT: Production
         ConnectionStrings__DefaultConnection: "server=localhost;port=3306;database=testdb;user=root;password=password"
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: '**/test-results.trx'
+
+    - name: Report test results
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: Unit Tests
+        path: '**/test-results.trx'
+        reporter: dotnet-trx
+        
+        
