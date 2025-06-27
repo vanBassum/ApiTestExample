@@ -59,6 +59,5 @@ jobs:
         name: Unit Tests
         path: '**/test-results.trx'
         reporter: dotnet-trx
-        fail-on-error: false
         output: check-run  # 👈 REQUIRED for rich summary in Checks tab
         
