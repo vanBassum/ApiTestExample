@@ -14,7 +14,21 @@ namespace TestProject
         {
             builder.ConfigureServices(services =>
             {
-                
+                // Check environment
+                var env = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
+
+                var sp = services.BuildServiceProvider();
+                using var scope = sp.CreateScope();
+                var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+                if (env == "Development")
+                {
+                    db.Database.EnsureCreated(); // For InMemory
+                }
+                else
+                {
+                    db.Database.Migrate(); // ✅ Apply real migrations for MySQL
+                }
             });
         }
     }

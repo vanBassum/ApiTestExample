@@ -14,7 +14,7 @@ namespace api_test_project.Data
                 .Build();
 
             var optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>();
-            var connectionString = configuration.GetConnectionString("DefaultConnection");
+            var connectionString = configuration.GetConnectionString("DefaultConnection") ?? throw new NullReferenceException("Connection string is null");
 
             // 🔧 This is what the CLI was missing
             optionsBuilder.UseMySQL(connectionString);
