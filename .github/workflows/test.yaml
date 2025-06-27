@@ -1,7 +1,11 @@
 on:
-  pull_request_target:
+  pull_request:
     branches: [ main ]
 
+permissions:
+  checks: write        # ✅ Needed for test summary
+  pull-requests: write # Optional, allows commenting if needed
+  contents: read
     
 jobs:
   build-and-test:
