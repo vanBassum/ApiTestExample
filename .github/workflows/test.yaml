@@ -60,5 +60,7 @@ jobs:
         path: '**/test-results.trx'
         reporter: dotnet-trx
         fail-on-error: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
         
