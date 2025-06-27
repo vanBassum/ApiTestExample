@@ -42,7 +42,8 @@ jobs:
       run: |
         dotnet ef migrations add __AutoCheckMigration__ --context ApplicationDbContext --project api_test_project --output-dir Data/Migrations || true
         git diff --exit-code || (echo "❌ Model changes detected! Run 'dotnet ef migrations add' locally." && exit 1)
-
+      env:
+        ConnectionStrings__DefaultConnection: "server=localhost;port=3306;database=testdb;user=root;password=password"
     - name: Run Tests
       run: dotnet test --no-build --configuration Release
       env:
