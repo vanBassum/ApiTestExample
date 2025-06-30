@@ -1,32 +1,36 @@
 ﻿using ApiExample.Data;
 using ApiExample.Data.Entities;
 using ApiExample.Models;
-using ApiExample.Queries;
 using Microsoft.EntityFrameworkCore;
 
 
 namespace ApiExample.Stores
 {
-    public class WeatherForecastStore : IStore<WeatherForecast, WeatherForecastQueryParameters>
+    public class WeatherForecastStore : IStore<WeatherForecast, IQueryBuilder<WeatherForecastEntity>>
     {
         private readonly AppDbContext _context;
         private readonly IMapper<WeatherForecast, WeatherForecastEntity> _mapper;
-        private readonly IQueryBuilder<WeatherForecastQueryParameters, WeatherForecastEntity> _queryBuilder;
 
-        public WeatherForecastStore(
-            AppDbContext context,
-            IMapper<WeatherForecast, WeatherForecastEntity> mapper,
-            IQueryBuilder<WeatherForecastQueryParameters, WeatherForecastEntity> queryBuilder)
+        public WeatherForecastStore(AppDbContext context, IMapper<WeatherForecast, WeatherForecastEntity> mapper)
         {
             _context = context;
             _mapper = mapper;
-            _queryBuilder = queryBuilder;
         }
 
-        public async Task<List<WeatherForecast>> GetAllAsync(WeatherForecastQueryParameters parameters)
+
+        public Task<List<WeatherForecast>> GetAllAsync<TEntity>(Func<IQueryable<TEntity>, IQueryable<TEntity>> query)
         {
-            var query = _queryBuilder.Apply(_context.Forecasts.AsQueryable(), parameters);
-            var entities = await query.ToListAsync();
+            throw new NotImplementedException();
+        }
+
+        public async Task<List<WeatherForecast>> GetAllAsync(IQueryBuilder<WeatherForecastEntity> queryBuilder)
+        {
+            var baseQuery = _context.Forecasts.AsQueryable();
+            var queryFunc = queryBuilder.BuildQuery();
+
+            var filteredQuery = queryFunc(baseQuery);
+            var entities = await filteredQuery.ToListAsync();
+
             return entities.Select(_mapper.ToDto).ToList();
         }
 
@@ -66,5 +70,6 @@ namespace ApiExample.Stores
                 await _context.SaveChangesAsync();
             }
         }
+
     }
 }

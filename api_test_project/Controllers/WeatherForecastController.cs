@@ -19,9 +19,9 @@ namespace ApiExample.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<WeatherForecast>>> GetAll([FromQuery] WeatherForecastQueryParameters query)
-        {
-            var result = await _store.GetAllAsync(query);
+        public async Task<ActionResult<List<WeatherForecast>>> GetAll([FromQuery] WeatherForecastQueryParameters parameters)
+        {;
+            var result = await _store.GetAllAsync(parameters);
             return Ok(result);
         }
 
