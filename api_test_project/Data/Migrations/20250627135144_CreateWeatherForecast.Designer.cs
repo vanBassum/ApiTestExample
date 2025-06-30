@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using api_test_project.Data;
+using ApiExample.Data;
 
 #nullable disable
 
-namespace api_test_project.Migrations
+namespace ApiExample.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(AppDbContext))]
     [Migration("20250627135144_CreateWeatherForecast")]
     partial class CreateWeatherForecast
     {

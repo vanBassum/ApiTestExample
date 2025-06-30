@@ -1,39 +1,60 @@
-using api_test_project.Data;
-using api_test_project.Models;
+using ApiExample.Data;
+using ApiExample.Data.Entities;
+using ApiExample.Models;
+using ApiExample.Queries;
+using ApiExample.Stores;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace api_test_project.Controllers
+namespace ApiExample.Controllers
 {
     [ApiController]
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private readonly ILogger<WeatherForecastController> _logger;
-        private readonly ApplicationDbContext _context;
+        private readonly IStore<WeatherForecast, WeatherForecastEntity> _repository;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger, ApplicationDbContext context)
+        public WeatherForecastController(IStore<WeatherForecast, WeatherForecastEntity> repository)
         {
-            _logger = logger;
-            _context = context;
+            _repository = repository;
         }
 
         [HttpGet]
-        public async Task<IEnumerable<WeatherForecast>> Get()
+        public async Task<ActionResult<List<WeatherForecast>>> GetAll([FromQuery] WeatherForecastQuery query)
         {
-            return await _context.Forecasts.ToListAsync();
+            var result = await _repository.GetAllAsync(query);
+            return Ok(result);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<WeatherForecast>> GetById(int id)
+        {
+            var dto = await _repository.GetByIdAsync(id);
+            if (dto == null)
+                return NotFound();
+
+            return Ok(dto);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post([FromBody] WeatherForecast forecast)
+        public async Task<ActionResult<WeatherForecast>> Create(WeatherForecast dto)
         {
-            if (forecast == null)
-            {
-                return BadRequest("Forecast cannot be null.");
-            }
-            _context.Forecasts.Add(forecast);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction(nameof(Get), new { id = forecast.Id }, forecast);
+            var created = await _repository.CreateAsync(dto);
+            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<WeatherForecast>> Update(int id, WeatherForecast dto)
+        {
+            var updated = await _repository.UpdateAsync(id, dto);
+            return Ok(updated);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            await _repository.DeleteAsync(id);
+            return NoContent();
         }
     }
 }

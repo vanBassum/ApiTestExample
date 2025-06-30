@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using api_test_project.Data;
+using ApiExample.Data;
 
-namespace TestProject
+namespace Testing.TestUtils
 {
     public class CustomWebApplicationFactory<TStartup> : WebApplicationFactory<TStartup> where TStartup : class
     {
@@ -19,7 +19,7 @@ namespace TestProject
 
                 var sp = services.BuildServiceProvider();
                 using var scope = sp.CreateScope();
-                var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
                 var provider = db.Database.ProviderName ?? throw new NullReferenceException("Db provider name is null");
 
                 if (provider.Contains("InMemory"))

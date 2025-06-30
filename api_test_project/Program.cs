@@ -1,20 +1,22 @@
-using api_test_project.Data;
+using ApiExample.Data;
 using Microsoft.EntityFrameworkCore;
+using PoC_API.Extentions;
 using Scalar.AspNetCore;
 using System;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddStores();
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 if (builder.Environment.IsDevelopment())
 {
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    builder.Services.AddDbContext<AppDbContext>(options =>
         options.UseInMemoryDatabase("TestDb"));
 }
 else
 {
-    builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    builder.Services.AddDbContext<AppDbContext>(options =>
         options.UseMySQL(builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new NullReferenceException("Connection string is null")));
 }
 
@@ -28,7 +30,7 @@ if (app.Environment.IsDevelopment())
 
     using (var scope = app.Services.CreateScope())
     {
-        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         dbContext.Database.EnsureCreated();
     }
 }
@@ -36,7 +38,7 @@ else
 {
     using (var scope = app.Services.CreateScope())
     {
-        var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         dbContext.Database.Migrate();
     }
 }
