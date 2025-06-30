@@ -1,18 +1,16 @@
-﻿using ApiExample.Queries;
+﻿
+using ApiExample.Models;
 
 namespace ApiExample.Stores
 {
-    public interface IStore<TDto, TEntity>
+    public interface IStore<TDto, TQueryParams>
     {
-        Task<List<TDto>> GetAllAsync(IQueryOptions<TEntity> queryOptions);
+        Task<List<WeatherForecast>> GetAllAsync(TQueryParams parameters);
         Task<TDto?> GetByIdAsync(int id);
         Task<TDto> CreateAsync(TDto dto);
         Task<TDto> UpdateAsync(int id, TDto dto);
         Task DeleteAsync(int id);
     }
-
-
-
 
 
 

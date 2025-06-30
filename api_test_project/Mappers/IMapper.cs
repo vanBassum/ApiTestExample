@@ -1,0 +1,15 @@
+using ApiExample.Queries;
+using System.ComponentModel.DataAnnotations;
+
+namespace ApiExample.Models
+{
+    public interface IMapper<TDto, TEntity>
+    {
+        TDto ToDto(TEntity entity);
+        TEntity ToEntity(TDto dto);
+        void UpdateEntity(TDto dto, TEntity entity);
+        void UpdateDto(TEntity entity, TDto dto);
+    }
+
+
+}

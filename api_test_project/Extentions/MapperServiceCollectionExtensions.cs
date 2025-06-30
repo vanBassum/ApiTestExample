@@ -1,15 +1,15 @@
-﻿using ApiExample.Stores;
+﻿using ApiExample.Models;
 using System.Reflection;
 
 namespace PoC_API.Extentions
 {
-    public static class StoreServiceCollectionExtensions
+    public static class MapperServiceCollectionExtensions
     {
-        public static IServiceCollection AddStores(this IServiceCollection services, Assembly? assembly = null)
+        public static IServiceCollection AddMappers(this IServiceCollection services, Assembly? assembly = null)
         {
             assembly ??= Assembly.GetExecutingAssembly();
 
-            var repoInterfaceType = typeof(IStore<,>);
+            var mapperInterfaceType = typeof(IMapper<,>);
             var types = assembly.GetTypes();
 
             foreach (var type in types)
@@ -19,7 +19,7 @@ namespace PoC_API.Extentions
                     var implementedInterface = type.GetInterfaces()
                         .FirstOrDefault(i =>
                             i.IsGenericType &&
-                            i.GetGenericTypeDefinition() == repoInterfaceType);
+                            i.GetGenericTypeDefinition() == mapperInterfaceType);
 
                     if (implementedInterface != null)
                     {
@@ -31,8 +31,6 @@ namespace PoC_API.Extentions
             return services;
         }
     }
-
-
 
 
 }

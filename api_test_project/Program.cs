@@ -2,12 +2,20 @@ using ApiExample.Data;
 using Microsoft.EntityFrameworkCore;
 using PoC_API.Extentions;
 using Scalar.AspNetCore;
-using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddStores();
-builder.Services.AddControllers();
+builder.Services.AddMappers();
+builder.Services.AddQueryBuilders();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 builder.Services.AddOpenApi();
+
 
 if (builder.Environment.IsDevelopment())
 {
@@ -49,3 +57,4 @@ app.MapControllers();
 app.Run();
 
 public partial class Program { }
+

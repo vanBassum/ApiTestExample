@@ -1,7 +1,6 @@
 using ApiExample.Data;
 using ApiExample.Data.Entities;
 using ApiExample.Models;
-using ApiExample.Queries;
 using ApiExample.Stores;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,24 +11,24 @@ namespace ApiExample.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private readonly IStore<WeatherForecast, WeatherForecastEntity> _repository;
+        private readonly IStore<WeatherForecast, WeatherForecastQueryParameters> _store;
 
-        public WeatherForecastController(IStore<WeatherForecast, WeatherForecastEntity> repository)
+        public WeatherForecastController(IStore<WeatherForecast, WeatherForecastQueryParameters> store)
         {
-            _repository = repository;
+            _store = store;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<WeatherForecast>>> GetAll([FromQuery] WeatherForecastQuery query)
+        public async Task<ActionResult<List<WeatherForecast>>> GetAll([FromQuery] WeatherForecastQueryParameters query)
         {
-            var result = await _repository.GetAllAsync(query);
+            var result = await _store.GetAllAsync(query);
             return Ok(result);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<WeatherForecast>> GetById(int id)
         {
-            var dto = await _repository.GetByIdAsync(id);
+            var dto = await _store.GetByIdAsync(id);
             if (dto == null)
                 return NotFound();
 
@@ -39,21 +38,21 @@ namespace ApiExample.Controllers
         [HttpPost]
         public async Task<ActionResult<WeatherForecast>> Create(WeatherForecast dto)
         {
-            var created = await _repository.CreateAsync(dto);
+            var created = await _store.CreateAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult<WeatherForecast>> Update(int id, WeatherForecast dto)
         {
-            var updated = await _repository.UpdateAsync(id, dto);
+            var updated = await _store.UpdateAsync(id, dto);
             return Ok(updated);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _repository.DeleteAsync(id);
+            await _store.DeleteAsync(id);
             return NoContent();
         }
     }
