@@ -21,16 +21,20 @@ namespace ApiExample.Features.WeatherForecast
         public void UpdateDto(WeatherForecastEntity entity, WeatherForecastDto dto)
         {
             dto.Id = entity.Id;
-            dto.Date = entity.Date;
+            dto.Date = DateOnly.FromDateTime(entity.Date); // Convert DateTime → DateOnly
             dto.TemperatureC = entity.TemperatureC;
             dto.Summary = GetSummary(entity.TemperatureC);
         }
 
         public void UpdateEntity(WeatherForecastDto dto, WeatherForecastEntity entity)
         {
-            entity.Date = dto.Date ?? entity.Date;
-            entity.TemperatureC = dto.TemperatureC ?? entity.TemperatureC;
+            if (dto.Date is not null)
+                entity.Date = dto.Date.Value.ToDateTime(TimeOnly.MinValue); // Convert DateOnly → DateTime
+
+            if (dto.TemperatureC is not null)
+                entity.TemperatureC = dto.TemperatureC.Value;
         }
+
         private string GetSummary(int temperatureC)
         {
             return temperatureC switch

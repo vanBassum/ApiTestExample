@@ -6,7 +6,7 @@ namespace ApiExample.Features.WeatherForecast
     {
         [Key]
         public int Id { get; set; }
-        public DateOnly Date { get; set; }
+        public DateTime Date { get; set; }
         public int TemperatureC { get; set; }
     }
 }

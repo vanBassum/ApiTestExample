@@ -1,7 +1,6 @@
 using ApiExample.Data;
 using ApiExample.Infrastructure.Mapping;
 using ApiExample.Infrastructure.Seeding;
-using ApiExample.Infrastructure.Serialization;
 using Microsoft.EntityFrameworkCore;
 using Scalar.AspNetCore;
 using System.Text.Json;
@@ -13,7 +12,6 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-    options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
 });
 builder.Services.AddOpenApi();
 

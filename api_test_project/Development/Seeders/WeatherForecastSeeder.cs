@@ -14,7 +14,7 @@ namespace ApiExample.Development.Seeders
 
             var forecasts = Enumerable.Range(1, 10).Select(i => new WeatherForecastEntity
             {
-                Date = DateOnly.FromDateTime(DateTime.Today.AddDays(i)),
+                Date = DateTime.Today.AddDays(i), // Changed from DateOnly to DateTime
                 TemperatureC = rng.Next(-20, 55)
             }).ToList();
 

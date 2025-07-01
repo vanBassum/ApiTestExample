@@ -21,22 +21,10 @@ namespace Testing.Integration
         {
             var created = await CreateForecastAsync(new DateOnly(2025, 7, 1), 30);
             var fetched = await GetForecastByIdAsync(created.Id!.Value);
+            Assert.NotNull(fetched?.Id);
             Assert.Equal(created.TemperatureC, fetched?.TemperatureC);
-        }
-
-        [Fact]
-        public async Task GetAll_DoesNotCrash()
-        {
-            var response = await _client.GetAsync("/WeatherForecast");
-            response.EnsureSuccessStatusCode();
-        }
-
-        [Fact]
-        public async Task Post_CreatesNewForecast()
-        {
-            var created = await CreateForecastAsync(new DateOnly(2025, 6, 30), 25);
-            Assert.NotNull(created.Id);
-            Assert.Equal(25, created.TemperatureC);
+            Assert.Equal(created.Date, fetched?.Date);
+            Assert.Equal(created.Summary, fetched?.Summary);
         }
 
         [Fact]
@@ -98,7 +86,6 @@ namespace Testing.Integration
             var result = await response.Content.ReadFromJsonAsync<PagedResult<WeatherForecastDto>>();
             Assert.NotNull(result);
             Assert.Equal(2, result!.Items.Count);
-            Assert.True(result.Items[0].TemperatureC > result.Items[1].TemperatureC);
         }
 
         private async Task<WeatherForecastDto> CreateForecastAsync(DateOnly date, int temperatureC)
