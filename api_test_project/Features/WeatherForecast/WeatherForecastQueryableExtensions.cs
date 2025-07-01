@@ -1,10 +1,8 @@
-﻿using ApiExample.Data.Entities;
-using ApiExample.Models;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
-namespace ApiExample.Queries
+namespace ApiExample.Features.WeatherForecast
 {
-    public static class WeatherForecastQueries
+    public static class WeatherForecastQueryableExtensions
     {
         public static IQueryable<WeatherForecastEntity> FilterBy(this IQueryable<WeatherForecastEntity> query, WeatherForecastQueryParameters parameters)
         {

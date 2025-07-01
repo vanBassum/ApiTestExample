@@ -1,4 +1,4 @@
-﻿using ApiExample.Data.Entities;
+﻿using ApiExample.Features.WeatherForecast;
 using Microsoft.EntityFrameworkCore;
 
 namespace ApiExample.Data

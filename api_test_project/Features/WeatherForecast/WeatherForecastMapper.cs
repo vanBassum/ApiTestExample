@@ -1,7 +1,6 @@
-﻿using ApiExample.Data.Entities;
-using ApiExample.Infrastructure.Mapping;
+﻿using ApiExample.Infrastructure.Mapping;
 
-namespace ApiExample.Models
+namespace ApiExample.Features.WeatherForecast
 {
     public class WeatherForecastMapper : IMapper<WeatherForecastDto, WeatherForecastEntity>
     {

@@ -1,8 +1,7 @@
 ﻿using ApiExample.Data;
 using System.Reflection;
-using ApiExample.Infrastructure.Seeding;
 
-namespace ApiExample.Infrastructure.Extensions
+namespace ApiExample.Infrastructure.Seeding
 {
     public static class SeederExtensions
     {
