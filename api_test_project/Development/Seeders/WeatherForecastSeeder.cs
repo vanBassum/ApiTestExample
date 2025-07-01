@@ -11,17 +11,11 @@ namespace ApiExample.Development.Seeders
             if (context.Forecasts.Any()) return;
 
             var rng = new Random();
-            var summaries = new[]
-            {
-                "Freezing", "Bracing", "Chilly", "Cool", "Mild",
-                "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-            };
 
             var forecasts = Enumerable.Range(1, 10).Select(i => new WeatherForecastEntity
             {
                 Date = DateOnly.FromDateTime(DateTime.Today.AddDays(i)),
-                TemperatureC = rng.Next(-20, 55),
-                Summary = summaries[rng.Next(summaries.Length)]
+                TemperatureC = rng.Next(-20, 55)
             }).ToList();
 
             context.Forecasts.AddRange(forecasts);

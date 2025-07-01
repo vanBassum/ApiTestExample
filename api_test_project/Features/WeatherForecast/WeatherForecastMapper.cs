@@ -23,14 +23,26 @@ namespace ApiExample.Features.WeatherForecast
             dto.Id = entity.Id;
             dto.Date = entity.Date;
             dto.TemperatureC = entity.TemperatureC;
-            dto.Summary = entity.Summary;
+            dto.Summary = GetSummary(entity.TemperatureC);
         }
 
         public void UpdateEntity(WeatherForecastDto dto, WeatherForecastEntity entity)
         {
             entity.Date = dto.Date ?? entity.Date;
             entity.TemperatureC = dto.TemperatureC ?? entity.TemperatureC;
-            entity.Summary = dto.Summary ?? entity.Summary;
+        }
+        private string GetSummary(int temperatureC)
+        {
+            return temperatureC switch
+            {
+                <= 0 => "Freezing",
+                <= 10 => "Cold",
+                <= 20 => "Cool",
+                <= 25 => "Mild",
+                <= 30 => "Warm",
+                <= 35 => "Hot",
+                _ => "Scorching"
+            };
         }
     }
 }
