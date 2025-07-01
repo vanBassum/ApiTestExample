@@ -6,7 +6,6 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddStores();
 builder.Services.AddMappers();
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
@@ -14,6 +13,8 @@ builder.Services.AddControllers().AddJsonOptions(options =>
     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 builder.Services.AddOpenApi();
+
+
 
 
 if (builder.Environment.IsDevelopment())
@@ -39,6 +40,7 @@ if (app.Environment.IsDevelopment())
     {
         var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
         dbContext.Database.EnsureCreated();
+        dbContext.SeedAll();
     }
 }
 else

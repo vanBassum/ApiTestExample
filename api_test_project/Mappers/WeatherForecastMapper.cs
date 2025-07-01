@@ -1,31 +1,32 @@
 ﻿using ApiExample.Data.Entities;
+using ApiExample.Infrastructure.Mapping;
 
 namespace ApiExample.Models
 {
-    public class WeatherForecastMapper : IMapper<WeatherForecast, WeatherForecastEntity>
+    public class WeatherForecastMapper : IMapper<WeatherForecastDto, WeatherForecastEntity>
     {
-        public WeatherForecast ToDto(WeatherForecastEntity entity)
+        public WeatherForecastDto ToDto(WeatherForecastEntity entity)
         {
-            var dto = new WeatherForecast();
+            var dto = new WeatherForecastDto();
             UpdateDto(entity, dto);
             return dto;
         }
 
-        public WeatherForecastEntity ToEntity(WeatherForecast dto)
+        public WeatherForecastEntity ToEntity(WeatherForecastDto dto)
         {
             var entity = new WeatherForecastEntity();
             UpdateEntity(dto, entity);
             return entity;
         }
 
-        public void UpdateDto(WeatherForecastEntity entity, WeatherForecast dto)
+        public void UpdateDto(WeatherForecastEntity entity, WeatherForecastDto dto)
         {
             dto.Id = entity.Id;
             dto.Date = entity.Date;
             dto.TemperatureC = entity.TemperatureC;
         }
 
-        public void UpdateEntity(WeatherForecast dto, WeatherForecastEntity entity)
+        public void UpdateEntity(WeatherForecastDto dto, WeatherForecastEntity entity)
         {
             entity.Date = dto.Date ?? entity.Date;
             entity.TemperatureC = dto.TemperatureC ?? entity.TemperatureC;

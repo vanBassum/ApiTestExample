@@ -79,15 +79,15 @@ namespace Testing.Integration
             var response = await _client.GetAsync(url);
             response.EnsureSuccessStatusCode();
 
-            var result = await response.Content.ReadFromJsonAsync<List<WeatherForecast>>();
+            var result = await response.Content.ReadFromJsonAsync<PagedResult<WeatherForecastDto>>();
             Assert.NotNull(result);
-            Assert.Equal(2, result!.Count);
-            Assert.True(result[0].TemperatureC > result[1].TemperatureC);
+            Assert.Equal(2, result!.Items.Count);
+            Assert.True(result.Items[0].TemperatureC > result.Items[1].TemperatureC);
         }
 
-        private async Task<WeatherForecast> CreateForecastAsync(DateOnly date, int temperatureC)
+        private async Task<WeatherForecastDto> CreateForecastAsync(DateOnly date, int temperatureC)
         {
-            var dto = new WeatherForecast
+            var dto = new WeatherForecastDto
             {
                 Date = date,
                 TemperatureC = temperatureC
@@ -95,17 +95,17 @@ namespace Testing.Integration
 
             var response = await _client.PostAsJsonAsync("/WeatherForecast", dto);
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<WeatherForecast>() ?? throw new Exception("Failed to deserialize WeatherForecast");
+            return await response.Content.ReadFromJsonAsync<WeatherForecastDto>() ?? throw new Exception("Failed to deserialize WeatherForecast");
         }
 
-        private async Task<WeatherForecast?> GetForecastByIdAsync(int id)
+        private async Task<WeatherForecastDto?> GetForecastByIdAsync(int id)
         {
             var response = await _client.GetAsync($"/WeatherForecast/{id}");
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
                 return null;
 
             response.EnsureSuccessStatusCode();
-            return await response.Content.ReadFromJsonAsync<WeatherForecast>();
+            return await response.Content.ReadFromJsonAsync<WeatherForecastDto>();
         }
     }
 }

@@ -1,7 +1,7 @@
 using ApiExample.Data;
 using ApiExample.Data.Entities;
 using ApiExample.Models;
-using ApiExample.Stores;
+using ApiExample.Queries;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,48 +11,94 @@ namespace ApiExample.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private readonly IStore<WeatherForecast, WeatherForecastQueryParameters> _store;
+        private readonly AppDbContext _context;
+        private readonly IMapper<WeatherForecastDto, WeatherForecastEntity> _mapper;
 
-        public WeatherForecastController(IStore<WeatherForecast, WeatherForecastQueryParameters> store)
+        public WeatherForecastController(AppDbContext context, IMapper<WeatherForecastDto, WeatherForecastEntity> mapper)
         {
-            _store = store;
+            _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<WeatherForecast>>> GetAll([FromQuery] WeatherForecastQueryParameters parameters)
-        {;
-            var result = await _store.GetAllAsync(parameters);
+        public async Task<ActionResult<PagedResult<WeatherForecastDto>>> GetAll([FromQuery] WeatherForecastQueryParameters queryParams)
+        {
+            var query = _context.Forecasts
+                .AsNoTracking()
+                .FilterBy(queryParams);
+
+            var totalCount = await query.CountAsync();
+
+            var entities = await query
+                .SortBy(queryParams)
+                .Paginate(queryParams)
+                .ToListAsync();
+
+            var items = entities
+                .Select(_mapper.ToDto)
+                .ToList();
+
+            var result = new PagedResult<WeatherForecastDto>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                Page = queryParams.Page,
+                PageSize = queryParams.PageSize
+            };
+
             return Ok(result);
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<WeatherForecast>> GetById(int id)
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<WeatherForecastDto>> GetById(int id)
         {
-            var dto = await _store.GetByIdAsync(id);
-            if (dto == null)
+            var entity = await _context.Forecasts.FindAsync(id);
+            if (entity == null)
                 return NotFound();
 
-            return Ok(dto);
+            return Ok(_mapper.ToDto(entity));
         }
 
         [HttpPost]
-        public async Task<ActionResult<WeatherForecast>> Create(WeatherForecast dto)
+        public async Task<ActionResult<WeatherForecastDto>> Create([FromBody] WeatherForecastDto dto)
         {
-            var created = await _store.CreateAsync(dto);
-            return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var entity = _mapper.ToEntity(dto);
+            await _context.Forecasts.AddAsync(entity);
+            await _context.SaveChangesAsync();
+
+            var createdDto = _mapper.ToDto(entity);
+            return CreatedAtAction(nameof(GetById), new { id = createdDto.Id }, createdDto);
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult<WeatherForecast>> Update(int id, WeatherForecast dto)
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult<WeatherForecastDto>> Update(int id, [FromBody] WeatherForecastDto dto)
         {
-            var updated = await _store.UpdateAsync(id, dto);
-            return Ok(updated);
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var entity = await _context.Forecasts.FindAsync(id);
+            if (entity == null)
+                return NotFound();
+
+            _mapper.UpdateEntity(dto, entity);
+            await _context.SaveChangesAsync();
+
+            return Ok(_mapper.ToDto(entity));
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _store.DeleteAsync(id);
+            var entity = await _context.Forecasts.FindAsync(id);
+            if (entity == null)
+                return NotFound();
+
+            _context.Forecasts.Remove(entity);
+            await _context.SaveChangesAsync();
+
             return NoContent();
         }
     }
