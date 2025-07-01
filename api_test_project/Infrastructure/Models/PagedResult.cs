@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace ApiExample.Models
+namespace ApiExample.Infrastructure.Models
 {
     public class PagedResult<T>
     {

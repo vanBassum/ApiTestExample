@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ApiExample.Data.Entities
+namespace ApiExample.Features.WeatherForecast
 {
     public class WeatherForecastEntity
     {

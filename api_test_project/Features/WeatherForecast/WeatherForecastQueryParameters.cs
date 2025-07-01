@@ -1,8 +1,7 @@
-﻿using ApiExample.Data.Entities;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 
-namespace ApiExample.Models
+namespace ApiExample.Features.WeatherForecast
 {
     public class WeatherForecastQueryParameters
     {

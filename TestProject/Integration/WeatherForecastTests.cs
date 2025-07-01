@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net.Http.Json;
 using Testing.TestUtils;
-using ApiExample.Models;
 using Microsoft.AspNetCore.WebUtilities;
+using ApiExample.Infrastructure.Models;
+using ApiExample.Features.WeatherForecast;
 
 namespace Testing.Integration
 {
@@ -13,6 +14,21 @@ namespace Testing.Integration
         public WeatherForecastControllerTests(CustomWebApplicationFactory<Program> factory)
         {
             _client = factory.CreateClient();
+        }
+
+        [Fact]
+        public async Task PostAndGet_Works()
+        {
+            var created = await CreateForecastAsync(new DateOnly(2025, 7, 1), 30);
+            var fetched = await GetForecastByIdAsync(created.Id!.Value);
+            Assert.Equal(created.TemperatureC, fetched?.TemperatureC);
+        }
+
+        [Fact]
+        public async Task GetAll_DoesNotCrash()
+        {
+            var response = await _client.GetAsync("/WeatherForecast");
+            response.EnsureSuccessStatusCode();
         }
 
         [Fact]

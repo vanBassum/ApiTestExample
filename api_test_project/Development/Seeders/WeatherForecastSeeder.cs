@@ -1,6 +1,8 @@
-﻿using ApiExample.Data.Entities;
+﻿using ApiExample.Data;
+using ApiExample.Features.WeatherForecast;
+using ApiExample.Infrastructure.Seeding;
 
-namespace ApiExample.Data.Seeders
+namespace ApiExample.Development.Seeders
 {
     public class WeatherForecastSeeder : ISeeder
     {

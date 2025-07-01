@@ -1,7 +1,6 @@
-﻿using ApiExample.Models;
-using System.Reflection;
+﻿using System.Reflection;
 
-namespace PoC_API.Extentions
+namespace ApiExample.Infrastructure.Mapping
 {
     public static class MapperServiceCollectionExtensions
     {

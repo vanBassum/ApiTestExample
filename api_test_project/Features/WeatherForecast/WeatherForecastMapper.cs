@@ -23,12 +23,14 @@ namespace ApiExample.Features.WeatherForecast
             dto.Id = entity.Id;
             dto.Date = entity.Date;
             dto.TemperatureC = entity.TemperatureC;
+            dto.Summary = entity.Summary;
         }
 
         public void UpdateEntity(WeatherForecastDto dto, WeatherForecastEntity entity)
         {
             entity.Date = dto.Date ?? entity.Date;
             entity.TemperatureC = dto.TemperatureC ?? entity.TemperatureC;
+            entity.Summary = dto.Summary ?? entity.Summary;
         }
     }
 }

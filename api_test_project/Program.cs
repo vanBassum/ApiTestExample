@@ -1,6 +1,7 @@
 using ApiExample.Data;
+using ApiExample.Infrastructure.Mapping;
+using ApiExample.Infrastructure.Seeding;
 using Microsoft.EntityFrameworkCore;
-using PoC_API.Extentions;
 using Scalar.AspNetCore;
 using System.Text.Json;
 using System.Text.Json.Serialization;

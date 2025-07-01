@@ -1,11 +1,10 @@
 using ApiExample.Data;
-using ApiExample.Data.Entities;
-using ApiExample.Models;
-using ApiExample.Queries;
+using ApiExample.Infrastructure.Mapping;
+using ApiExample.Infrastructure.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace ApiExample.Controllers
+namespace ApiExample.Features.WeatherForecast
 {
     [ApiController]
     [Route("[controller]")]

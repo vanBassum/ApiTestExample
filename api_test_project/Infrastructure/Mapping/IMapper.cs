@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ApiExample.Models
+namespace ApiExample.Infrastructure.Mapping
 {
     public interface IMapper<TDto, TEntity>
     {
