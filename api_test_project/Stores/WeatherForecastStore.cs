@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ApiExample.Stores
 {
-    public class WeatherForecastStore : IStore<WeatherForecast, IQueryBuilder<WeatherForecastEntity>>
+    public class WeatherForecastStore : IStore<WeatherForecast, WeatherForecastQueryParameters>
     {
         private readonly AppDbContext _context;
         private readonly IMapper<WeatherForecast, WeatherForecastEntity> _mapper;
@@ -17,20 +17,11 @@ namespace ApiExample.Stores
             _mapper = mapper;
         }
 
-
-        public Task<List<WeatherForecast>> GetAllAsync<TEntity>(Func<IQueryable<TEntity>, IQueryable<TEntity>> query)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<List<WeatherForecast>> GetAllAsync(IQueryBuilder<WeatherForecastEntity> queryBuilder)
+        public async Task<List<WeatherForecast>> GetAllAsync(WeatherForecastQueryParameters queryParams)
         {
             var baseQuery = _context.Forecasts.AsQueryable();
-            var queryFunc = queryBuilder.BuildQuery();
-
-            var filteredQuery = queryFunc(baseQuery);
+            var filteredQuery = queryParams.Apply(baseQuery);
             var entities = await filteredQuery.ToListAsync();
-
             return entities.Select(_mapper.ToDto).ToList();
         }
 

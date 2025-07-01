@@ -1,4 +1,3 @@
-using ApiExample.Queries;
 using System.ComponentModel.DataAnnotations;
 
 namespace ApiExample.Models
