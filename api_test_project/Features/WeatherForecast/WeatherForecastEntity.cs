@@ -1,12 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace api_test_project.Models
+namespace ApiExample.Features.WeatherForecast
 {
-    public class WeatherForecast
+    public class WeatherForecastEntity
     {
         [Key]
         public int Id { get; set; }
-        public DateOnly Date { get; set; }
+        public DateTime Date { get; set; }
         public int TemperatureC { get; set; }
     }
 }

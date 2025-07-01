@@ -4,7 +4,7 @@ using MySql.EntityFrameworkCore.Metadata;
 
 #nullable disable
 
-namespace api_test_project.Migrations
+namespace ApiExample.Migrations
 {
     /// <inheritdoc />
     public partial class CreateWeatherForecast : Migration
